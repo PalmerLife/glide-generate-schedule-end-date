@@ -1,0 +1,33 @@
+[
+  {
+    "kind": "column",
+    "name": "Extract ID by Index",
+    "description": "Extracts an ID from a cumulative array based on the index provided.",
+    "author": "Your Name <your_email@example.com>",
+    "params": [
+      {
+        "name": "index",
+        "displayName": "Index",
+        "type": "string"
+      },
+      {
+        "name": "input2",
+        "displayName": "IDs - Input 2",
+        "type": "string"
+      },
+      {
+        "name": "input3",
+        "displayName": "IDs - Input 3",
+        "type": "string"
+      },
+      {
+        "name": "input4",
+        "displayName": "IDs - Input 4",
+        "type": "string"
+      }
+    ],
+    "result": {
+      "type": "string"
+    }
+  }
+]
