@@ -1,4 +1,12 @@
 window.function = function(date, period) {
+  // Validate input parameters
+  if (!date || !date.value) {
+    throw new Error("Invalid or missing date input. Please provide a valid date.");
+  }
+  if (!period || !period.value) {
+    throw new Error("Invalid or missing period input. Please specify 'Week' or 'Month'.");
+  }
+
   // Parse the input date
   const inputDate = new Date(date.value);
   if (isNaN(inputDate)) {
