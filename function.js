@@ -3,9 +3,11 @@ window.function = function(inputDate, weeksAhead) {
     throw new Error("Both inputDate and weeksAhead are required.");
   }
 
-  const date = new Date(inputDate.value);
+  // Parse inputDate in the format "YYYY-MM-DD, HH:mm:ss AM/PM"
+  const dateParts = inputDate.value.split(",")[0].trim(); // Extract the date part
+  const date = new Date(dateParts);
   if (isNaN(date)) {
-    throw new Error("Invalid date format. Use 'January 6, 2025'.");
+    throw new Error("Invalid date format. Use 'YYYY-MM-DD, HH:mm:ss AM/PM'.");
   }
 
   const weeks = weeksAhead.value.trim();
