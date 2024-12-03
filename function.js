@@ -1,34 +1,53 @@
-window.function = function(date, period) {
-  // Validate input parameters
-  if (!date || !date.value) {
-    throw new Error("Invalid or missing date input. Please provide a valid date.");
-  }
-  if (!period || !period.value) {
-    throw new Error("Invalid or missing period input. Please specify 'Week' or 'Month'.");
+window.function = function(inputDate, weeksAhead) {
+  if (!inputDate.value || !weeksAhead.value) {
+    throw new Error("Both inputDate and weeksAhead are required.");
   }
 
-  // Parse the input date
-  const inputDate = new Date(date.value);
-  if (isNaN(inputDate)) {
-    throw new Error("Invalid date format. Please provide a valid date.");
+  const date = new Date(inputDate.value);
+  if (isNaN(date)) {
+    throw new Error("Invalid date format. Use 'January 6, 2025'.");
   }
 
-  // Get the period value
-  const periodValue = period.value.toLowerCase();
+  const weeks = weeksAhead.value.trim();
+  let resultDate;
 
-  if (periodValue === "week") {
-    // Calculate the first Friday after the input date
-    const dayOfWeek = inputDate.getDay();
-    const daysToFriday = (5 - dayOfWeek + 7) % 7 || 7; // Ensures Friday is after the date
-    inputDate.setDate(inputDate.getDate() + daysToFriday);
-    return inputDate.toISOString().split("T")[0];
-  } else if (periodValue === "month") {
-    // Calculate the last day of the month
-    const year = inputDate.getFullYear();
-    const month = inputDate.getMonth() + 1; // Month after the input date
-    const nextMonth = new Date(year, month, 0); // Day 0 of the next month gives the last day of this month
-    return nextMonth.toISOString().split("T")[0];
-  } else {
-    throw new Error("Invalid period. Please specify either 'Week' or 'Month'.");
+  switch (weeks) {
+    case "1":
+      resultDate = getNextFriday(date, 1);
+      break;
+    case "2":
+      resultDate = getNextFriday(date, 2);
+      break;
+    case "3":
+      resultDate = getNextFriday(date, 3);
+      break;
+    case "4":
+      resultDate = getLastDayOfNextMonth(date);
+      break;
+    default:
+      throw new Error("Invalid input for weeksAhead. Use '1', '2', '3', or '4'.");
   }
+
+  return formatDate(resultDate);
 };
+
+function getNextFriday(startDate, weekOffset) {
+  const startDay = startDate.getDay();
+  const daysToFriday = (5 - startDay + 7) % 7 || 7;
+  const targetDate = new Date(startDate);
+  targetDate.setDate(targetDate.getDate() + daysToFriday + (weekOffset - 1) * 7);
+  return targetDate;
+}
+
+function getLastDayOfNextMonth(startDate) {
+  const year = startDate.getFullYear();
+  const month = startDate.getMonth() + 2; // Next month (1-based)
+  return new Date(year, month, 0); // Day 0 gives the last day of the previous month
+}
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
