@@ -1,18 +1,18 @@
 [
   {
     "kind": "column",
-    "name": "Next Date Plugin",
-    "description": "Generates the first Friday after a given date or the last day of the month after a given date.",
-    "author": "Your Name <your_email@example.com>",
+    "name": "Date Calculator",
+    "description": "Calculates a future date based on the given date and number of weeks (or next month).",
+    "author": "Your Name <your.email@example.com>",
     "params": [
       {
-        "name": "date",
-        "displayName": "Date",
+        "name": "inputDate",
+        "displayName": "Input Date",
         "type": "string"
       },
       {
-        "name": "period",
-        "displayName": "Time Period",
+        "name": "weeksAhead",
+        "displayName": "Weeks Ahead",
         "type": "string"
       }
     ],
