@@ -3,11 +3,12 @@ window.function = function(inputDate, weeksAhead) {
     throw new Error("Both inputDate and weeksAhead are required.");
   }
 
-  // Parse inputDate in the format "YYYY-MM-DD, HH:mm:ss AM/PM"
-  const dateParts = inputDate.value.split(",")[0].trim(); // Extract the date part
-  const date = new Date(dateParts);
+  // Parse the date in the format "YYYY-MM-DD, HH:mm:ss AM/PM"
+  const dateString = inputDate.value.split(",")[0].trim(); // Extract the date part
+  const date = new Date(dateString);
+  
   if (isNaN(date)) {
-    throw new Error("Invalid date format. Use 'YYYY-MM-DD, HH:mm:ss AM/PM'.");
+    throw new Error("Invalid or missing date input. Please provide a valid date in 'YYYY-MM-DD, HH:mm:ss AM/PM' format.");
   }
 
   const weeks = weeksAhead.value.trim();
