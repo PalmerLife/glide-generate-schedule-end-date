@@ -1,18 +1,23 @@
 [
   {
     "kind": "column",
-    "name": "Date Calculator",
-    "description": "Calculates a future date based on the given date and number of weeks (or next month).",
+    "name": "Next Working Day",
+    "description": "Returns the first working day after a given date, considering workdays and national holidays.",
     "author": "Your Name <your.email@example.com>",
     "params": [
       {
-        "name": "inputDate",
-        "displayName": "Input Date",
+        "name": "date",
+        "displayName": "Last Date",
         "type": "string"
       },
       {
-        "name": "weeksAhead",
-        "displayName": "Weeks Ahead",
+        "name": "workDays",
+        "displayName": "Work Days",
+        "type": "array"
+      },
+      {
+        "name": "country",
+        "displayName": "Country",
         "type": "string"
       }
     ],
