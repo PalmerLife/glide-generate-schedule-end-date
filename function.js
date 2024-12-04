@@ -1,11 +1,14 @@
 window.function = async function(date, workDays, country) {
   const inputDate = new Date(date.value);
-  const workDaysArray = workDays.value;
+  const workDaysString = workDays.value;
   const countryCode = country.value;
 
-  if (!inputDate || !Array.isArray(workDaysArray) || !countryCode) {
-    throw new Error("Invalid inputs. Ensure you provide a valid date, an array of work days, and a country code.");
+  if (!inputDate || !workDaysString || !countryCode) {
+    throw new Error("Invalid inputs. Ensure you provide a valid date, a string of workdays, and a country code.");
   }
+
+  // Parse workdays string into an array
+  const workDaysArray = workDaysString.split(',').map(day => day.trim());
 
   const holidaysApiUrl = `https://date.nager.at/Api/v2/PublicHolidays/${inputDate.getFullYear()}/${countryCode}`;
 
@@ -28,7 +31,7 @@ window.function = async function(date, workDays, country) {
       workDaysArray.includes(dayOfWeek) &&
       !holidayDates.includes(dateString)
     ) {
-      return nextDate.toDateString();
+      return dateString; // Return the date as a string (e.g., "2024-12-09")
     }
 
     nextDate.setDate(nextDate.getDate() + 1);
