@@ -1,56 +1,36 @@
-window.function = function(inputDate, weeksAhead) {
-  if (!inputDate.value || !weeksAhead.value) {
-    throw new Error("Both inputDate and weeksAhead are required.");
+window.function = async function(date, workDays, country) {
+  const inputDate = new Date(date.value);
+  const workDaysArray = workDays.value;
+  const countryCode = country.value;
+
+  if (!inputDate || !Array.isArray(workDaysArray) || !countryCode) {
+    throw new Error("Invalid inputs. Ensure you provide a valid date, an array of work days, and a country code.");
   }
 
-  // Parse the date in the format "YYYY-MM-DD, HH:mm:ss AM/PM"
-  const dateString = inputDate.value.split(",")[0].trim(); // Extract the date part
-  const date = new Date(dateString);
-  
-  if (isNaN(date)) {
-    throw new Error("Invalid or missing date input. Please provide a valid date in 'YYYY-MM-DD, HH:mm:ss AM/PM' format.");
+  const holidaysApiUrl = `https://date.nager.at/Api/v2/PublicHolidays/${inputDate.getFullYear()}/${countryCode}`;
+
+  // Fetch national holidays for the given country
+  const holidaysResponse = await fetch(holidaysApiUrl);
+  if (!holidaysResponse.ok) {
+    throw new Error(`Failed to fetch holidays for ${countryCode}`);
   }
+  const holidays = await holidaysResponse.json();
+  const holidayDates = holidays.map(holiday => new Date(holiday.date).toISOString().split('T')[0]);
 
-  const weeks = weeksAhead.value.trim();
-  let resultDate;
+  let nextDate = new Date(inputDate);
+  nextDate.setDate(nextDate.getDate() + 1);
 
-  switch (weeks) {
-    case "1":
-      resultDate = getNextFriday(date, 1);
-      break;
-    case "2":
-      resultDate = getNextFriday(date, 2);
-      break;
-    case "3":
-      resultDate = getNextFriday(date, 3);
-      break;
-    case "4":
-      resultDate = getLastDayOfNextMonth(date);
-      break;
-    default:
-      throw new Error("Invalid input for weeksAhead. Use '1', '2', '3', or '4'.");
+  while (true) {
+    const dayOfWeek = nextDate.toLocaleDateString('en-US', { weekday: 'long' });
+    const dateString = nextDate.toISOString().split('T')[0];
+
+    if (
+      workDaysArray.includes(dayOfWeek) &&
+      !holidayDates.includes(dateString)
+    ) {
+      return nextDate.toDateString();
+    }
+
+    nextDate.setDate(nextDate.getDate() + 1);
   }
-
-  return formatDate(resultDate);
 };
-
-function getNextFriday(startDate, weekOffset) {
-  const startDay = startDate.getDay();
-  const daysToFriday = (5 - startDay + 7) % 7 || 7;
-  const targetDate = new Date(startDate);
-  targetDate.setDate(targetDate.getDate() + daysToFriday + (weekOffset - 1) * 7);
-  return targetDate;
-}
-
-function getLastDayOfNextMonth(startDate) {
-  const year = startDate.getFullYear();
-  const month = startDate.getMonth() + 2; // Next month (1-based)
-  return new Date(year, month, 0); // Day 0 gives the last day of the previous month
-}
-
-function formatDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
